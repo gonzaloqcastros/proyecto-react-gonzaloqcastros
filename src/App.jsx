@@ -6,7 +6,7 @@ import {  Route, Routes  } from "react-router-dom";
 import Grid from "./components/Grid";
 import { db } from "../db/firebase-config.js";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
-import Product from "./components/Product";
+import ProductCard from "./components/ProductCard";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -38,11 +38,11 @@ function App() {
     }
   };
 
-  const deleteProduct = async (id) => {
-    const docRef = doc(db, "Productos", id);
+  const removeFromCart = async (id) => {
+    const docRef = doc(db, "cart", id);
     await deleteDoc(docRef);
-    const data = await getDocs(productsCollectionRef);
-    setProducts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const data = await getDocs(cartCollectionRef);
+    setCart(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
   const addToCart = async (id) => {
@@ -73,15 +73,30 @@ function App() {
                   loading={loading}
                   products={products}
                   getProduct={getProduct}
-                  deleteProduct={deleteProduct}
+                  removeFromCart={removeFromCart}
                   addToCart={addToCart}
                 />
               }
             />
-            <Route path="/products/:id" element={<Product product={product} />} />
+            <Route path="/products/:id"
+                   element={
+                    <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    imagen={product.imagen}
+                    nombre={product.nombre}
+                    precio={product.precio}
+                    descripcion={product.descripcion}
+                    type={product.type}
+                    getProduct={getProduct}
+                    addToCart={addToCart}
+                    removeFromCart={removeFromCart}
+                  />
+                } 
+                        />
             <Route
               path="/cart"
-              element={<Grid loading={loading} products={cart} />}
+              element={<Grid loading={loading} products={cart} removeFromCart={removeFromCart} />}
             />
           </Routes>
         </Container>

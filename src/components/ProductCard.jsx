@@ -20,10 +20,49 @@ const ProductCard = ({
   type,
   id,
   getProduct,
-  updateProduct,
   addToCart,
+  removeFromCart,
 }) => {
   const path = useLocation().pathname;
+  let buttons;
+
+  switch (path) {
+    case `/products/:id`:
+      buttons = (
+        <Button
+          variant="solid"
+          colorScheme="blue"
+          onClick={() => addToCart(id)}
+        >
+          Agregar al carrito
+        </Button>
+      );
+      break;
+    case "/cart":
+      buttons = (
+        <Button
+          variant="solid"
+          colorScheme="red"
+          onClick={() => removeFromCart(id)}
+        >
+          Eliminar producto
+        </Button>
+      );
+      break;
+    default:
+      buttons = (
+        <Link to={`/products/${id}`}>
+          <Button
+            variant="solid"
+            colorScheme="green"
+            onClick={() => getProduct(id)}
+          >
+            Ver más
+          </Button>
+        </Link>
+      );
+      break;
+  }
 
   return (
     <Card maxW="sm" mt={5} mx={5}>
@@ -47,35 +86,7 @@ const ProductCard = ({
         </Stack>
       </CardBody>
       <Divider />
-      {path !== "/cart" && (
-        <CardFooter>
-          <ButtonGroup spacing="2">
-            <Link to={`/products/${id}`}>
-              <Button
-                variant="solid"
-                colorScheme="green"
-                onClick={() => getProduct(id)}
-              >
-                Ver
-              </Button>
-            </Link>
-            <Button
-              variant="solid"
-              colorScheme="yellow"
-              onClick={() => updateProduct(id)}
-            >
-              Update
-            </Button>
-            <Button
-              variant="solid"
-              colorScheme="blue"
-              onClick={() => addToCart(id)}
-            >
-              Agregar al carrito
-            </Button>
-          </ButtonGroup>
-        </CardFooter>
-      )}
+      <CardFooter>{buttons}</CardFooter>
     </Card>
   );
 };

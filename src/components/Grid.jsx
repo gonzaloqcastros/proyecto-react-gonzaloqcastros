@@ -8,6 +8,7 @@ const Grid = ({
   getProduct,
   deleteProduct,
   addToCart,
+  removeFromCart,
 }) => {
   return (
     <Center>
@@ -35,6 +36,7 @@ const Grid = ({
                 getProduct={getProduct}
                 deleteProduct={deleteProduct}
                 addToCart={addToCart}
+                removeFromCart={removeFromCart}
               />
             );
           })}
