@@ -87,6 +87,16 @@ function App() {
   }
 };
 
+const calculateTotalPrice = (cart) => {
+  return cart.reduce((total, product) => total + (product.quantity * product.precio), 0);
+};
+
+const totalPrice = calculateTotalPrice(cart);
+
+console.log(totalPrice);
+
+const isCartEmpty = !cart || !cart.length;
+
   useEffect(() => {
     getProducts();
     getCart();
@@ -116,7 +126,7 @@ function App() {
                         />
             <Route
               path="/cart"
-              element={<Grid loading={loading} products={cart} removeFromCart={removeFromCart} />}
+              element={<Grid loading={loading} products={cart} removeFromCart={removeFromCart} totalPrice={totalPrice} isCartEmpty={isCartEmpty} />}
             />
           </Routes>
         </Container>

@@ -1,6 +1,7 @@
-import { Center, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Center, Container, Divider, SimpleGrid, Spinner, Stat, StatLabel, StatNumber, Text, Box } from "@chakra-ui/react";
 import React from "react";
 import ProductCard from "./ProductCard";
+import { useLocation } from "react-router-dom";
 
 const Grid = ({
   products,
@@ -9,10 +10,13 @@ const Grid = ({
   deleteProduct,
   addToCart,
   removeFromCart,
+  totalPrice,
+  isCartEmpty,
 }) => {
+  const path = useLocation().pathname;
   return (
     <Center>
-      <SimpleGrid columns={2}>
+      <SimpleGrid columns={3} spacing="20px">
         {loading && (
           <Spinner
             thickness="4px"
@@ -41,8 +45,28 @@ const Grid = ({
               />
             );
           })}
-      </SimpleGrid>
-    </Center>
+          <Divider />
+          </SimpleGrid>
+          {path === "/cart" ? (
+          isCartEmpty ? (
+            <Center>
+              <Text fontSize='5xl'>
+                El carrito está vacío.
+              </Text>
+            </Center>
+          ) : (
+            <>
+            <Container mt={10}>
+              <Stat>
+                <StatLabel>Precio total</StatLabel>
+                <StatNumber>${totalPrice}</StatNumber>
+              </Stat>
+            </Container>
+          </>
+          )
+        ) : null}
+      
+      </Center>
   );
 };
 
