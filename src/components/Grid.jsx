@@ -1,4 +1,4 @@
-import { Center, Container, Divider, SimpleGrid, Spinner, Stat, StatLabel, StatNumber, Text, Box } from "@chakra-ui/react";
+import { Center, Divider, SimpleGrid, Spinner, Stat, StatLabel, StatNumber, Text, Box } from "@chakra-ui/react";
 import React from "react";
 import ProductCard from "./ProductCard";
 import { useLocation } from "react-router-dom";
@@ -15,8 +15,9 @@ const Grid = ({
 }) => {
   const path = useLocation().pathname;
   return (
+    <>
     <Center>
-      <SimpleGrid columns={3} spacing="20px">
+    <SimpleGrid columns={1} spacing={10}>
         {loading && (
           <Spinner
             thickness="4px"
@@ -26,6 +27,10 @@ const Grid = ({
             size="xl"
           />
         )}
+        </SimpleGrid>
+        </Center>
+        <Center>
+        <SimpleGrid columns={3} spacing={10}>
         {products &&
           products.map((product) => {
             return (
@@ -45,28 +50,31 @@ const Grid = ({
               />
             );
           })}
-          <Divider />
           </SimpleGrid>
+          </Center>
+          <Center mt='20'>
           {path === "/cart" ? (
           isCartEmpty ? (
-            <Center>
+           
               <Text fontSize='5xl'>
                 El carrito está vacío.
               </Text>
-            </Center>
+           
           ) : (
             <>
-            <Container mt={10}>
-              <Stat>
-                <StatLabel>Precio total</StatLabel>
-                <StatNumber>${totalPrice}</StatNumber>
-              </Stat>
-            </Container>
-          </>
+           
+              
+                <Stat>
+                  <StatLabel>Precio total</StatLabel>
+                  <StatNumber>${totalPrice}</StatNumber>
+                </Stat>
+             
+             
+            </>
           )
         ) : null}
-      
       </Center>
+      </>
   );
 };
 
