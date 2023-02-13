@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import { Box, Button, FormControl, FormLabel, Select, Stack, Text, SimpleGrid, Spinner, Center } from "@chakra-ui/react";
+import { Container, Box, Heading, Text, Button } from "@chakra-ui/react";
 
-const Product = ({
-  product,
-  addToCart,
-  loading,
-}) => {
-
+const Product = ({ loading, product, addToCart }) => {
   const [quantity, setQuantity] = useState(1);
 
-  const handleQuantityChange = (e) => {
+  const handleChange = (e) => {
     setQuantity(e.target.value);
   };
 
@@ -17,41 +12,25 @@ const Product = ({
     addToCart(product.id, quantity);
   };
 
+  if (loading) return <p>Cargando...</p>;
+
   return (
-    <Center>
-      <SimpleGrid columns={1}>
-          {loading && (
-            <Spinner
-              thickness="4px"
-              speed="0.65s"
-              emptyColor="gray.200"
-              color="blue.500"
-              size="xl"
-            />
-          )}
-      <Box maxW="sm" borderWidth="1px" rounded="lg" overflow="hidden">
-        <img src={product.imagen} alt={product.nombre} />
-        <Box p="6">
-          <Stack spacing={4}>
-            <Text fontWeight="bold">{product.nombre}</Text>
-            <Text fontWeight="medium">{product.precio}</Text>
-            <Text>{product.descripcion}</Text>
-            <FormControl>
-              <FormLabel htmlFor="quantity">Cantidad</FormLabel>
-              <Select id="quantity" value={quantity} onChange={handleQuantityChange}>
-                {[1, 2, 3, 4, 5].map((value) => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </Select>
-            </FormControl>
-            <Button onClick={handleAddToCart}>Añadir al carrito</Button>
-          </Stack>
-        </Box>
+    <Container maxW="container.lg">
+      <Box>
+        <Heading as="h2" mb={4}>
+          {product.nombre}
+        </Heading>
+        <Text mb={4}>{product.descripcion}</Text>
+        <Text mb={4}>Precio: {product.precio}</Text>
+        <input
+          type="number"
+          value={quantity}
+          onChange={handleChange}
+          min={1}
+        />
+        <Button onClick={handleAddToCart}>Agregar al carrito</Button>
       </Box>
-      </SimpleGrid>
-    </Center>
+    </Container>
   );
 };
 

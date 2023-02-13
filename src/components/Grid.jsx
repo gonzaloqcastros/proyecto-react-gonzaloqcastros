@@ -33,6 +33,7 @@ const Grid = ({
                 precio={product.precio}
                 descripcionCorta={product.descripcionCorta}
                 type={product.type}
+                quantity={product.quantity}
                 getProduct={getProduct}
                 deleteProduct={deleteProduct}
                 addToCart={addToCart}

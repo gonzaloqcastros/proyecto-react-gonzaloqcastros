@@ -15,6 +15,7 @@ function App() {
   const productsCollectionRef = collection(db, "Productos");
   const cartCollectionRef = collection(db, "cart");
   const [product, setProduct] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState({});
 
   const getProducts = async () => {
     const data = await getDocs(productsCollectionRef);
@@ -33,8 +34,8 @@ function App() {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const product = docSnap.data();
-    product.id = id;
-    setProduct(product);
+      product.id = id;
+      setSelectedProduct(product);
     } else {
       console.log("No such document!");
     }
@@ -53,28 +54,38 @@ function App() {
   }, [cart]);
 
   const addToCart = async (id, quantity) => {
-    const docRef = doc(db, "Productos", id);
-    const docSnap = await getDoc(docRef);
-    const product = docSnap.data();
-    product.quantity = quantity;
-    product.id = id;
+    const selectedProductCopy = { ...selectedProduct };
+    selectedProductCopy.quantity = quantity;
     let isInCart = false;
     for (const item of cart) {
       if (item.id === id) {
-        item.quantity += quantity;
+        item.quantity = parseInt(item.quantity, 10) + parseInt(quantity, 10);
         isInCart = true;
         break;
       }
     }
     if (!isInCart) {
-      await addDoc(cartCollectionRef, product).then(({ id }) => {
+      selectedProductCopy.quantity = quantity;
+      await addDoc(cartCollectionRef, selectedProductCopy).then(({ id }) => {
         console.log(`Documento con ID ${id} agregado al carrito`);
       });
-      setCart([...cart, product]);
+      setCart([...cart, selectedProductCopy]);
     } else {
       setCart([...cart]);
     }
   };
+  
+
+  const handleAddToCart = () => {
+  const existingProductIndex = cart.findIndex(p => p.id === product.id);
+  if (existingProductIndex === -1) {
+    addToCart({ ...product, quantity });
+  } else {
+    const updatedCart = [...cart];
+    updatedCart[existingProductIndex].quantity += quantity;
+    setCart(updatedCart);
+  }
+};
 
   useEffect(() => {
     getProducts();
@@ -100,8 +111,7 @@ function App() {
               }
             />
             <Route path="/products/:id"
-                   element={<Product loading={loading} product={product} addToCart={addToCart}
-                  />
+                    element={<Product loading={loading} product={selectedProduct} addToCart={addToCart} />
                 } 
                         />
             <Route

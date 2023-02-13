@@ -20,7 +20,6 @@ const ProductCard = ({
   type,
   id,
   getProduct,
-  addToCart,
   removeFromCart,
 }) => {
   const path = useLocation().pathname;
