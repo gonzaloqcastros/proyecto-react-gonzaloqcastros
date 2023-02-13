@@ -16,8 +16,8 @@ import { FaHome, FaShoppingCart } from "react-icons/fa";
 import { AiFillPlusSquare } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
-const NavBar = ({ products, cart }) => {
-  const unique = [...new Set(products.map((item) => item.type))];
+const NavBar = ({ cart }) => {
+  const totalQuantity = cart.reduce((total, product) => total + product.quantity, 0);
 
   return (
     <Flex justify="space-between" background="blackAlpha.900">
@@ -30,7 +30,7 @@ const NavBar = ({ products, cart }) => {
         <Link to="cart">
           <Box bg="teal" py={3} px={5}>
             <FaShoppingCart color="white" />
-            <Text color="white">{cart.length}</Text>
+            <Text color="white">{totalQuantity}</Text>
           </Box>
         </Link>
       </Flex>

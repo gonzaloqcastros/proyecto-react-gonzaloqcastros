@@ -21,6 +21,7 @@ const ProductCard = ({
   id,
   getProduct,
   removeFromCart,
+  quantity,
 }) => {
   const path = useLocation().pathname;
   let buttons;
@@ -67,9 +68,19 @@ const ProductCard = ({
           <Text color="gray.500" fontSize="sm" fontWeight="bold">
             {type}
           </Text>
-          <Text color="green.700" fontSize="2xl">
-            {precio}
-          </Text>
+          {path === "/cart" ? (
+            <Text color="green.700" fontSize="2xl">
+              {precio} x {quantity} ={" "}
+              {(precio * quantity).toLocaleString("es-ES", {
+                style: "currency",
+                currency: "USD",
+              })}
+            </Text>
+          ) : (
+            <Text color="green.700" fontSize="2xl">
+              ${precio}
+            </Text>
+          )}
         </Stack>
       </CardBody>
       <Divider />
