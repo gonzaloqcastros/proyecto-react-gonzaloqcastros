@@ -6,7 +6,7 @@ import {  Route, Routes  } from "react-router-dom";
 import Grid from "./components/Grid";
 import { db } from "../db/firebase-config.js";
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs } from "firebase/firestore";
-import ProductCard from "./components/ProductCard";
+import Product from "./components/Product";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -32,7 +32,9 @@ function App() {
     const docRef = doc(db, "Productos", id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      setProduct(docSnap.data());
+      const product = docSnap.data();
+    product.id = id;
+    setProduct(product);
     } else {
       console.log("No such document!");
     }
@@ -41,18 +43,37 @@ function App() {
   const removeFromCart = async (id) => {
     const docRef = doc(db, "cart", id);
     await deleteDoc(docRef);
+    console.log("Producto eliminado del carrito");
     const data = await getDocs(cartCollectionRef);
     setCart(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
+  
+  useEffect(() => {
+    console.log("Cart updated: ", cart);
+  }, [cart]);
 
-  const addToCart = async (id) => {
+  const addToCart = async (id, quantity) => {
     const docRef = doc(db, "Productos", id);
     const docSnap = await getDoc(docRef);
     const product = docSnap.data();
-    await addDoc(cartCollectionRef, product).then(({ id }) => {
-      console.log(`Documento con ID ${id} agregado al carrito`);
-    });
-    setCart([...cart, product]);
+    product.quantity = quantity;
+    product.id = id;
+    let isInCart = false;
+    for (const item of cart) {
+      if (item.id === id) {
+        item.quantity += quantity;
+        isInCart = true;
+        break;
+      }
+    }
+    if (!isInCart) {
+      await addDoc(cartCollectionRef, product).then(({ id }) => {
+        console.log(`Documento con ID ${id} agregado al carrito`);
+      });
+      setCart([...cart, product]);
+    } else {
+      setCart([...cart]);
+    }
   };
 
   useEffect(() => {
@@ -79,18 +100,7 @@ function App() {
               }
             />
             <Route path="/products/:id"
-                   element={
-                    <ProductCard
-                    key={product.id}
-                    id={product.id}
-                    imagen={product.imagen}
-                    nombre={product.nombre}
-                    precio={product.precio}
-                    descripcion={product.descripcion}
-                    type={product.type}
-                    getProduct={getProduct}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
+                   element={<Product loading={loading} product={product} addToCart={addToCart}
                   />
                 } 
                         />

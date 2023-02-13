@@ -22,23 +22,11 @@ const NavBar = ({ products, cart }) => {
   return (
     <Flex justify="space-between" background="blackAlpha.900">
       <Link to="/">
-        <Box bg="white" py={3} px={5}>
-          <FaHome color="teal" />
+        <Box py={6} px={5}>
+          <FaHome color="white" />
         </Box>
       </Link>
-      <Tabs colorScheme="green" background="blackAlpha.900">
-        <TabList color="white">
-          {unique.map((type) => {
-            return <Tab key={type}>(type)</Tab>;
-          })}
-        </TabList>
-      </Tabs>
       <Flex>
-        <Link to="create">
-          <Box bg="black" py={3} px={5}>
-            <AiFillPlusSquare color="teal" />
-          </Box>
-        </Link>
         <Link to="cart">
           <Box bg="teal" py={3} px={5}>
             <FaShoppingCart color="white" />

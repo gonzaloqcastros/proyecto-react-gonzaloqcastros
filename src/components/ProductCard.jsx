@@ -16,7 +16,7 @@ const ProductCard = ({
   imagen,
   nombre,
   precio,
-  descripcion,
+  descripcionCorta,
   type,
   id,
   getProduct,
@@ -25,19 +25,7 @@ const ProductCard = ({
 }) => {
   const path = useLocation().pathname;
   let buttons;
-
   switch (path) {
-    case `/products/:id`:
-      buttons = (
-        <Button
-          variant="solid"
-          colorScheme="blue"
-          onClick={() => addToCart(id)}
-        >
-          Agregar al carrito
-        </Button>
-      );
-      break;
     case "/cart":
       buttons = (
         <Button
@@ -76,12 +64,12 @@ const ProductCard = ({
           <Link to={`/products/${id}`}>
             <Heading size="md">{nombre}</Heading>
           </Link>
-          <Text>{descripcion}</Text>
+          <Text>{descripcionCorta}</Text>
           <Text color="gray.500" fontSize="sm" fontWeight="bold">
-            ${type}
+            {type}
           </Text>
           <Text color="green.700" fontSize="2xl">
-            ${precio}
+            {precio}
           </Text>
         </Stack>
       </CardBody>
